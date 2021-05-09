@@ -43,8 +43,14 @@ class _MyHomePageState extends State<MyHomePage> {
     if (_controller.text == null || _controller.text.length == 0) {
       _streamController.add(null);
     }
-    Response response = await get(Uri.parse(_url + _controller.text.trim()), headers: {"Authorization": "Token " + _token});
-    _streamController.add(jsonDecode(response.body));
+    try{
+      _streamController.add('waiting');
+      Response response = await get(Uri.parse(_url + _controller.text.trim()), headers: {"Authorization": "Token " + _token});
+      _streamController.add(jsonDecode(response.body));
+    }
+    catch(e){
+      _streamController.add('error');
+    }
   }
 
 
@@ -74,8 +80,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     borderRadius: BorderRadius.circular(24)
                   ),
                   child: TextFormField(
-                    onChanged: (String text){
-
+                    onFieldSubmitted: (String text){
+                      _search();
                     },
                     controller: _controller,
                     decoration: InputDecoration(
@@ -105,38 +111,66 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.data == null) {
             return Center(
-              child: Text('Enter a word'),
+              child: Text(
+                'Enter a word',
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.grey
+                ),
+              ),
             );
           }
 
-          return ListView.builder(
-            itemCount: snapshot.data['definitions'].length,
-            itemBuilder: (BuildContext ctx, int index) {
-              return ListBody(
-                children: [
-                  Container(
-                    child: ListTile(
-                      title: Text(
-                        _controller.text.trim() + ' (' + snapshot.data['definitions'][index]['type'] + ')',
-                        style: TextStyle(
-                          color: Colors.blue,
+          if (snapshot.data == 'waiting') {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (snapshot.data.toString() == '[{message: No definition :(}]') {
+            return Center(
+              child: Text(
+                'No Result',
+                style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.grey
+                ),
+              ),
+            );
+          }
+
+            return ListView.builder(
+              itemCount: snapshot.data['definitions'].length,
+              itemBuilder: (BuildContext ctx, int index) {
+                return Container(
+                  color: Colors.grey[200],
+                  margin: EdgeInsets.only(top: 10),
+                  child: ListBody(
+                    children: [
+                      Container(
+                        child: ListTile(
+                          title: Text(
+                            _controller.text.trim() + ' (' +
+                                snapshot.data['definitions'][index]['type'] + ')',
+                            style: TextStyle(
+                              color: Colors.blue,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+
+                      Padding(
+                        padding: EdgeInsets.only(left: 12, right: 12, bottom: 12),
+                        child: Text(
+                          snapshot.data['definitions'][index]['definition'],
+                        ),
+                      )
+                    ],
                   ),
-
-                  Padding(
-                    padding: EdgeInsets.only(left: 12, right: 12, bottom: 12),
-                    child: Text(
-                      snapshot.data['definitions'][index]['definition'],
-                    ),
-                  )
-                ],
-              );
-            },
-          );
-
-        },
+                );
+              },
+            );
+          }
 
       )
     );
