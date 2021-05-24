@@ -1,36 +1,55 @@
 import 'package:dictionary_2/database/dbhelp.dart';
+import 'package:dictionary_2/database/dbhelp_va.dart';
 import 'package:dictionary_2/models/word.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class SearchResult extends StatelessWidget {
-
+class SearchResult extends StatefulWidget {
+  SearchResult({this.word,this.table});
   final Word word;
+  final String table;
+  @override
+  _SearchResultState createState() => _SearchResultState();
+}
 
-  const SearchResult({Key key, this.word}) : super(key: key);
+class _SearchResultState extends State<SearchResult> {
+
+  String _is_fav;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _is_fav = widget.word.is_fav;
+    print('tu dien ${widget.table}');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(word.word),
+        title: Text(widget.word.word),
         actions: [
           IconButton(
             icon: Icon(
-              word.is_fav == 'false' ? Icons.star_border : Icons.star,
+              _is_fav == 'false' ? Icons.star_border : Icons.star,
               color: Colors.amber,
             ),
             onPressed: (){
               DbHelp databaseHelp = DbHelp.instance;
+              DbHelp_va databaseHelp_va = DbHelp_va.instance;
               Word fav = Word(
-                id: word.id,
-                word: word.word,
-                description: word.description,
-                pronounce: word.pronounce,
-                is_fav: 'true',
+                id: widget.word.id,
+                word: widget.word.word,
+                description: widget.word.description,
+                pronounce: widget.word.pronounce,
+                is_fav: _is_fav == 'true' ? 'false' : 'true',
               );
-              databaseHelp.addFav(fav);
-              print('add fav');
+              widget.table == 'av' ? databaseHelp.addFav(fav) : databaseHelp_va.addFav(fav);
+              setState(() {
+                _is_fav = _is_fav == 'true' ? 'false' : 'true';
+              });
+              print(_is_fav);
             },
           )
         ],
@@ -42,7 +61,7 @@ class SearchResult extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                word.word,
+                widget.word.word,
                 style: TextStyle(
                   fontSize: 24,
                   color: Colors.blue,
@@ -50,16 +69,16 @@ class SearchResult extends StatelessWidget {
               ),
               SizedBox(height: 10,),
               Text(
-                '/${word.pronounce}/',
+                '/${widget.word.pronounce}/',
                 style:  TextStyle(
                   fontSize: 16,
                 ),
               ),
               SizedBox(height: 24,),
               Text(
-                word.description,
+                widget.word.description,
                 style: TextStyle(
-                  fontSize: 16
+                    fontSize: 16
                 ),
               )
             ],
@@ -69,6 +88,12 @@ class SearchResult extends StatelessWidget {
     );
   }
 }
+
+
+// class SearchResult extends StatelessWidget {
+//
+//
+// }
 
 
 // class SearchResult extends StatefulWidget {

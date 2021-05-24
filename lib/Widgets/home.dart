@@ -1,10 +1,15 @@
 import 'package:dictionary_2/Widgets/list_word.dart';
 import 'file:///H:/Android%20Project/dictionary_2/lib/pages/search_result.dart';
 import 'package:dictionary_2/database/dbhelp.dart';
+import 'package:dictionary_2/database/dbhelp_va.dart';
 import 'package:flutter/material.dart';
 import 'package:dictionary_2/models/word.dart';
 
 class Home extends StatefulWidget {
+
+  Home({this.table});
+  String table;
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -12,6 +17,7 @@ class Home extends StatefulWidget {
 class _HomePageState extends State<Home> {
 
   DbHelp databaseHelp = DbHelp.instance;
+  DbHelp_va databaseHelp_va = DbHelp_va.instance;
   String keyword = 'cghchgchghg';
   List<Word> words = new List();
 
@@ -19,6 +25,7 @@ class _HomePageState extends State<Home> {
   void initState() {
     // TODO: implement initState
     databaseHelp.getCount();
+    print(widget.table);
     super.initState();
   }
 
@@ -44,7 +51,7 @@ class _HomePageState extends State<Home> {
             onSubmitted: (value) async {
               if (value == '') keyword = 'nghvcggd';
               else keyword = value;
-              words = await databaseHelp.searchExactly(keyword);
+              words = widget.table == 'av' ? await databaseHelp.searchExactly(keyword) : await databaseHelp_va.searchExactly(keyword);
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => SearchResult(word: words[0])),
@@ -57,13 +64,11 @@ class _HomePageState extends State<Home> {
           ),
         ),
         FutureBuilder(
-          future: databaseHelp.searchWord(keyword),
+          future: widget.table == 'av' ? databaseHelp.searchWord(keyword) : databaseHelp_va.searchWord(keyword),
           builder: (context, snapshot) {
             if (snapshot.hasError) print('error');
             var data = snapshot.data;
-            print(keyword);
-            print(data);
-            return snapshot.hasData ? WordList(data) : new Center(child: Text('No word that include this keyword'),);
+            return snapshot.hasData ? WordList(data,widget.table) : new Center(child: Text('No word that include this keyword'),);
           },
         )
 

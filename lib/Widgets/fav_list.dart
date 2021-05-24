@@ -1,16 +1,30 @@
 import 'file:///H:/Android%20Project/dictionary_2/lib/pages/search_result.dart';
 import 'package:dictionary_2/database/dbhelp.dart';
+import 'package:dictionary_2/database/dbhelp_va.dart';
 import 'package:dictionary_2/models/word.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class FavList extends StatelessWidget {
+class FavList extends StatefulWidget {
 
-  List<Word> words;
+  final List<Word> words;
+  String table;
 
-  FavList(List<Word> this.words, {
+  FavList(List<Word> this.words, String this.table, {
     Key key
   }):super(key: key);
+  @override
+  _FavListState createState() => _FavListState();
+}
+
+class _FavListState extends State<FavList> {
+
+  String _is_fav;
+
+  void _initState(int index) {
+    // TODO: implement initState
+    _is_fav = widget.words[index].is_fav;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +32,14 @@ class FavList extends StatelessWidget {
       child: ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
-        itemCount: words.length,
+        itemCount: widget.words.length,
         itemBuilder: (BuildContext context, int index){
-          return InkWell(
+          _initState(index);
+          return _is_fav == 'true' ? InkWell(
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SearchResult(word: words[index])),
+                MaterialPageRoute(builder: (context) => SearchResult(word: widget.words[index], table: widget.table,),),
               );
             },
             child: Padding(
@@ -33,7 +48,7 @@ class FavList extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    words[index].word,
+                    widget.words[index].word,
                     style: TextStyle(
                         fontSize: 16
                     ),
@@ -44,23 +59,28 @@ class FavList extends StatelessWidget {
                     ),
                     onPressed: () {
                       DbHelp databaseHelp = DbHelp.instance;
+                      DbHelp_va databaseHelp_va = DbHelp_va.instance;
                       Word fav = Word(
-                        id: words[index].id,
-                        word: words[index].word,
-                        description: words[index].description,
-                        pronounce: words[index].pronounce,
+                        id: widget.words[index].id,
+                        word: widget.words[index].word,
+                        description: widget.words[index].description,
+                        pronounce: widget.words[index].pronounce,
                         is_fav: 'false',
                       );
-                      databaseHelp.addFav(fav);
+                      widget.table == 'av' ? databaseHelp.addFav(fav) : databaseHelp_va.addFav(fav);
+                      setState(() {
+                        _is_fav = 'false';
+                      });
                       print('remove fav');
                     },
                   )
                 ],
               ),
             ),
-          );
+          ) : Container();
         },
       ),
     );
   }
 }
+

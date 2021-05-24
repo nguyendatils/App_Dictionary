@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 class WordList extends StatelessWidget {
 
   List<Word> words;
+  String table;
 
-  WordList(List<Word> this.words, {
+  WordList(List<Word> this.words, String this.table, {
     Key key
   }):super(key: key);
 
@@ -23,7 +24,7 @@ class WordList extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SearchResult(word: words[index])),
+                MaterialPageRoute(builder: (context) => SearchResult(word: words[index], table: table,)),
               );
             },
             child: Padding(
