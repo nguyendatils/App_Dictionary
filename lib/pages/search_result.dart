@@ -104,7 +104,7 @@ class _SearchResultState extends State<SearchResult> {
               ),
               SizedBox(height: 10,),
               Text(
-                '/${widget.word.pronounce}/',
+                widget.table == 'av' ? '/${widget.word.pronounce}/' : '',
                 style:  TextStyle(
                   fontSize: 16,
                 ),
