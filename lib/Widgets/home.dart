@@ -1,5 +1,5 @@
 import 'package:dictionary_2/Widgets/list_word.dart';
-import 'file:///H:/Android%20Project/dictionary_2/lib/pages/search_result.dart';
+import 'package:dictionary_2/pages/search_result.dart';
 import 'package:dictionary_2/database/dbhelp.dart';
 import 'package:dictionary_2/database/dbhelp_va.dart';
 import 'package:flutter/material.dart';
