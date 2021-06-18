@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:dictionary_2/database/dbhelp.dart';
 import 'package:dictionary_2/database/dbhelp_va.dart';
 import 'package:dictionary_2/models/word.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
+
 
 class SearchResult extends StatefulWidget {
   SearchResult({this.word,this.table});
@@ -15,12 +20,32 @@ class SearchResult extends StatefulWidget {
 class _SearchResultState extends State<SearchResult> {
 
   String _is_fav;
+  String mp3_link;
+  String _url = 'https://api.dictionaryapi.dev/api/v2/entries/en_US/';
+
+  getmp3() async {
+    Response response = await get(Uri.parse(_url + widget.word.word));
+    print(jsonDecode(response.body)[0]['phonetics'][0]['audio']);
+    mp3_link = jsonDecode(response.body)[0]['phonetics'][0]['audio'];
+  }
+
+  final player = AssetsAudioPlayer();
+
+  _play() async{
+    try {
+      await player.open(
+        Audio.network(mp3_link),
+      );
+    } catch (t) {
+      //mp3 unreachable
+    }
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     _is_fav = widget.word.is_fav;
-    print('tu dien ${widget.table}');
+    getmp3();
     super.initState();
   }
 
@@ -60,12 +85,22 @@ class _SearchResultState extends State<SearchResult> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                widget.word.word,
-                style: TextStyle(
-                  fontSize: 24,
-                  color: Colors.blue,
-                ),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      widget.word.word,
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Colors.blue,
+                      ),
+                    ),
+                    FloatingActionButton(
+                      onPressed: _play,
+                      mini: true,
+                      child: Icon(Icons.multitrack_audio),
+                    ),
+                  ]
               ),
               SizedBox(height: 10,),
               Text(

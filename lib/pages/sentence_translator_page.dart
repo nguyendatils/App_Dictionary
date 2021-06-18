@@ -13,10 +13,15 @@ class SentenceTranslator extends StatefulWidget {
 }
 
 class _SentenceTranslatorState extends State<SentenceTranslator> {
+
   static String value = '' ;
+  String translate_result = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Google tranlation'),
+      ),
       body: SafeArea(
         child: Padding(padding: EdgeInsets.fromLTRB(10, 100, 10, 10),
           child: Column(
@@ -30,14 +35,12 @@ class _SentenceTranslatorState extends State<SentenceTranslator> {
                   value = text;
                   //translate();
                 },
-                onSubmitted: (text) async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => StartPage(),
-                  )
-                  );
+                onSubmitted: (text){
                   value = text;
                   translate();
+                  setState(() {
+
+                  });
                 },
               ),
               SizedBox(height: 20,),
@@ -49,9 +52,29 @@ class _SentenceTranslatorState extends State<SentenceTranslator> {
                         MaterialPageRoute(builder: (context) => TranslatorResult()
                         )
                     );*/
+                    setState(() {
+
+                    });
                   },
-                  child: Text('Submit'),
-              )
+                  child: Text('Translate'),
+              ),
+              SizedBox(height: 20,),
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey,),
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(10, 15, 10, 15),
+                  child: Text(
+                    translate_result,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
             ],
             ),
         ),
@@ -63,45 +86,32 @@ class _SentenceTranslatorState extends State<SentenceTranslator> {
   Future <void> translate() async {
     final translator = GoogleTranslator();
     final input = value;
-    var translation = await translator.translate(input, from :'en' , to: 'vi');
-    String translate_result = translation.toString();
+    var translation = await translator.translate(input, from: 'en', to: 'vi');
+    translate_result = translation.toString();
+    setState(() {
 
-
-    Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ResultScreen(result: translate_result,),
-          ));
-    }
-
-}
-
-
-
-// Màn hình in kết quả dịch
-class ResultScreen extends StatelessWidget {
-  final String result;
-  //const ResultScreen({Key? key}) : super(key: key);
-  ResultScreen({Key key, @required this.result}) : super(key: key);
-  @override
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Translate Result')),
-      body: Center(
-        child: Text(
-          result,
-          style: TextStyle(fontSize: 24),
-        ),
-      ),
-    );
+    });
   }
 }
 
 
 
-
-
-
-
-
+// Màn hình in kết quả dịch
+// class ResultScreen extends StatelessWidget {
+//   final String result;
+//   //const ResultScreen({Key? key}) : super(key: key);
+//   ResultScreen({Key key, @required this.result}) : super(key: key);
+//   @override
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text('Translate Result')),
+//       body: Center(
+//         child: Text(
+//           result,
+//           style: TextStyle(fontSize: 24),
+//         ),
+//       ),
+//     );
+//   }
+// }

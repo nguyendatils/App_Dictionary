@@ -51,10 +51,10 @@ class _HomePageState extends State<Home> {
             onSubmitted: (value) async {
               if (value == '') keyword = 'nghvcggd';
               else keyword = value;
-              words = widget.table == 'av' ? await databaseHelp.searchExactly(keyword) : await databaseHelp_va.searchExactly(keyword);
-              Navigator.push(
+              words = widget.table == 'av' ? await databaseHelp.searchWord(keyword) : await databaseHelp_va.searchWord(keyword);
+              if (words.length != 0) Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SearchResult(word: words[0])),
+                MaterialPageRoute(builder: (context) => SearchResult(word: words[0],table: widget.table,)),
               );
 
               setState(() {

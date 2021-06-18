@@ -28,7 +28,7 @@ class _StartPageState extends State<StartPage> {
                   width: 100,
                 )
               ),
-              SizedBox(height: 10,),
+              SizedBox(height: 15                                                                            ,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
               ),
@@ -47,31 +47,11 @@ class _StartPageState extends State<StartPage> {
                           )
                       );
                     },
-                    child: const Text('Từ điển Anh-Việt'),
+                    child: const Text('Tra cứu từ điển'),
                   ),
                 ],
               ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      textStyle: const TextStyle(fontSize: 20),
-                    ),
-                    onPressed: () {
-                      print("va");
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomePage()
-                          )
-                      );
-                      },
-                    child: const Text('Từ điển Việt-Anh'),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
+              SizedBox(height: 15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
