@@ -1,4 +1,5 @@
 import 'package:dictionary_2/pages/home_page.dart';
+import 'package:dictionary_2/pages/sentence_translator_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dictionary_2/main.dart';
@@ -39,7 +40,7 @@ class _StartPageState extends State<StartPage> {
                       textStyle: const TextStyle(fontSize: 20),
                     ),
                     onPressed: () {
-                      print("1");
+                      print("av");
                       Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => HomePage()
@@ -59,7 +60,7 @@ class _StartPageState extends State<StartPage> {
                       textStyle: const TextStyle(fontSize: 20),
                     ),
                     onPressed: () {
-                      print("2");
+                      print("va");
                       Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => HomePage()
@@ -78,7 +79,14 @@ class _StartPageState extends State<StartPage> {
                     style: TextButton.styleFrom(
                       textStyle: const TextStyle(fontSize: 20),
                     ),
-                    onPressed: () {print("Google Translate");},
+                    onPressed: () {
+                      print("Google Translate");
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SentenceTranslator()
+                          )
+                      );
+                    },
                     child: const Text('Google Translate'),
                   ),
                 ],
